@@ -1,3 +1,6 @@
+
+import java.io.File;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -8,12 +11,19 @@
  * @author Aaron
  */
 public class CurrencyCalc extends javax.swing.JFrame {
-
+String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN",
+"BHD","BMD","BOB","BRL","BSD","CAD","CHF","CLP","CNY","COP","CZK","DKK","EGP","EUR",
+"FJD","GBP","GHS","GMD","GTQ","HKD","HRK","HUF","IDR","ILS","INR","ISK","JMD","JOD",
+"JPY","KES","KHR","KRW","KWD","LAK","LBP","LKR","LTL","LVL","MAD","MDL","MGA","MKD",
+"MUR","MVR","MXN","MYR","NAD","NGN","NOK","NPR","NZD","OMR", "PAB","PEN","PHP","PKR",
+"PLN","PYG","QAR","RON","RSD","RUB","SAR","SCR","SEK","SGD","SYP","THB","TND","TRY",
+"TWD","UAH","UGX","USD","UYU","VEF","VDN","XAF","XCD","XOF","XPF","ZAR"};
     /**
      * Creates new form CurrencyCalc
      */
     public CurrencyCalc() {
         initComponents();
+        dbCheck();
     }
 
     /**
@@ -140,4 +150,16 @@ public class CurrencyCalc extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+private void dbCheck(){   //checks to see if the db has been created
+   File isdb = new File("\\db\\myDB"); 
+   if (isdb.exists()){
+       System.out.println("does exist");
+   }
+   else{// if it does not exist run the DB create class to create DB
+       System.out.println("does not exist");
+       new DBCreate(countries);
+   }
+}
+
 }
