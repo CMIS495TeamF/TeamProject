@@ -47,7 +47,9 @@ public class DBCreate {
         //st.execute("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(12))");
         //st.execute("INSERT  INTO TEST VALUES(1,'TEN'),(2,'TWO')");
         for (String h : c){
-        st.execute("CREATE TABLE "+ h + "()");
+        String insert = "CREATE TABLE \"ME\"."+ h + "(CountryCode VARCHAR(5) NOT NULL, CurrencyName VARCHAR(50), Rate DECIMAL(10,5),\n" +
+"RetreiveDate DATE, primary key (CountryCode))";
+            st.execute(insert);
         }
         st.close();
         con.close();
