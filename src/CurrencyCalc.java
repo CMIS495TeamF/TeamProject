@@ -155,6 +155,7 @@ private void dbCheck(){   //checks to see if the db has been created
    File isdb = new File("\\db\\myDB"); 
    if (isdb.exists()){
        System.out.println("does exist");
+       new XmlParser(countries);
    }
    else{// if it does not exist run the DB create class to create DB
        System.out.println("does not exist");
