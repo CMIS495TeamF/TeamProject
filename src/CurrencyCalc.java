@@ -11,6 +11,8 @@ import java.io.File;
  * @author Aaron
  */
 public class CurrencyCalc extends javax.swing.JFrame {
+// String array that contains all of the countries codes. This is what names each table
+// and is also used to open each rss feed, as the url contains these codes
 String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN",
 "BHD","BMD","BOB","BRL","BSD","CAD","CHF","CLP","CNY","COP","CZK","DKK","EGP","EUR",
 "FJD","GBP","GHS","GMD","GTQ","HKD","HRK","HUF","IDR","ILS","INR","ISK","JMD","JOD",
@@ -23,6 +25,7 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
      */
     public CurrencyCalc() {
         initComponents();
+        // method to see if a data store allready exists
         dbCheck();
     }
 
@@ -151,6 +154,7 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 
+    // method to determine if a data store is allready present
 private void dbCheck(){   //checks to see if the db has been created
    File isdb = new File("\\db\\myDB"); 
    if (isdb.exists()){

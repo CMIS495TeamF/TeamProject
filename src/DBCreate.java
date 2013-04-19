@@ -15,17 +15,23 @@ import java.util.Properties;
 public class DBCreate {
     Connection con = null;
     Statement st = null;
+    // String array declared at class level to be used by methods
     String[] c;
+    // data base connection strings
     private String dbURL = "jdbc:derby:myDB;create=true;user=me;password=mine";
     private String dbURL2 = "jdbc:derby:myDB;create=false;user=me;password=mine";
     public DBCreate(String[] c){
+        // set the passed string array to the local string array
         this.c = c;
+        // this sets the derby database file location
         Properties p = System.getProperties();
         p.setProperty("derby.system.home", "\\db\\");
+        // method to create new data store
         createDB();
+        // create the tables in the data store
         createTables();
     }
-    
+    // method to create the data store
     private void createDB()
     {
         try
@@ -39,13 +45,12 @@ public class DBCreate {
         {System.err.println(ex);
         }
     }
-
+    // method to create the tables
     private void createTables(){
         try{
         con = DriverManager.getConnection(dbURL2);
         st = con.createStatement();
-        //st.execute("CREATE TABLE TEST(ID INT PRIMARY KEY, NAME VARCHAR(12))");
-        //st.execute("INSERT  INTO TEST VALUES(1,'TEN'),(2,'TWO')");
+        // for loop iterate over all elements in the array and create the tables
         for (String h : c){
         String insert = "CREATE TABLE \"ME\"."+ h + "(CountryCode VARCHAR(5) NOT NULL, CurrencyName VARCHAR(50), Rate DECIMAL(10,5),\n" +
 "RetreiveDate DATE, primary key (CountryCode))";
