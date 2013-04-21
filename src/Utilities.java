@@ -38,8 +38,14 @@ public class Utilities {
         if (r == null)return null;
         int pos = r.lastIndexOf("=");
         r = r.substring(pos + 1);
+        
         pos = r.lastIndexOf(".");
         r = r.substring(0, pos + 6);
+        if (r.contains(",")){
+            pos = r.lastIndexOf(",");
+        r = (r.substring(0, pos) + r.substring(pos+1));
+        System.out.println(r);
+        }
         return r;
     }
     

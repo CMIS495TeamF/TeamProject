@@ -19,7 +19,7 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
 "JPY","KES","KHR","KRW","KWD","LAK","LBP","LKR","LTL","LVL","MAD","MDL","MGA","MKD",
 "MUR","MVR","MXN","MYR","NAD","NGN","NOK","NPR","NZD","OMR", "PAB","PEN","PHP","PKR",
 "PLN","PYG","QAR","RON","RSD","RUB","SAR","SCR","SEK","SGD","SYP","THB","TND","TRY",
-"TWD","UAH","UGX","USD","UYU","VEF","VDN","XAF","XCD","XOF","XPF","ZAR"};
+"TWD","UAH","UGX","USD","UYU","VEF","VND","XAF","XCD","XOF","XPF","ZAR"};
     /**
      * Creates new form CurrencyCalc
      */

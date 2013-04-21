@@ -22,7 +22,8 @@ public class DBLoad {
     // method to take parsed information and store int he tables
     public void fillTables(String t, ArrayList<String[]> c) throws SQLException{
         con = DBase.dbConnection();
-        String insert = "Insert into \"ME\"."+ t +" VALUES(?,?,?,?)";
+        String insert = "INSERT INTO \"ME\"."+ t +" VALUES(?,?,?,?)";
+               
         //con.setAutoCommit(false);
         pst = con.prepareStatement(insert);
         for (String[] items : c){
