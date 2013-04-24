@@ -20,12 +20,12 @@ public class DBCreate {
     // data base connection strings
     private String dbURL = "jdbc:derby:myDB;create=true;user=me;password=mine";
     private String dbURL2 = "jdbc:derby:myDB;create=false;user=me;password=mine";
-    public DBCreate(String[] c){
+    public DBCreate(String[] c, String dir){
         // set the passed string array to the local string array
         this.c = c;
         // this sets the derby database file location
         Properties p = System.getProperties();
-        p.setProperty("derby.system.home", "\\db\\");
+        p.setProperty("derby.system.home", dir);
         // method to create new data store
         createDB();
         // create the tables in the data store

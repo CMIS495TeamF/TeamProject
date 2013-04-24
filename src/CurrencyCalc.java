@@ -23,10 +23,14 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
     /**
      * Creates new form CurrencyCalc
      */
+// static string to set the db to the executing directory, instead of the root
+// set static so any class has any access to it
+public static String dir;
     public CurrencyCalc() {
         initComponents();
         // method to see if a data store allready exists
-        dbCheck();
+      dir = System.getProperty("user.dir");
+        dbCheck(dir);
     }
 
     /**
@@ -141,6 +145,7 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CurrencyCalc().setVisible(true);
+                
             }
         });
     }
@@ -155,15 +160,15 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
     // End of variables declaration//GEN-END:variables
 
     // method to determine if a data store is allready present
-private void dbCheck(){   //checks to see if the db has been created
-   File isdb = new File("\\db\\myDB"); 
+private void dbCheck(String dir){   //checks to see if the db has been created
+   File isdb = new File(dir +"\\myDB"); 
    if (isdb.exists()){
        System.out.println("does exist");
        new XmlParser(countries);
    }
    else{// if it does not exist run the DB create class to create DB
        System.out.println("does not exist");
-       new DBCreate(countries);
+       new DBCreate(countries, dir);
    }
 }
 

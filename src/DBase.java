@@ -18,7 +18,7 @@ public class DBase {
     
     public static Connection dbConnection(){
        Properties p = System.getProperties();
-       p.setProperty("derby.system.home", "\\db\\");
+       p.setProperty("derby.system.home", CurrencyCalc.dir);
        Connection con = null;
        String dbURL = "jdbc:derby:myDB;create=false;user=me;password=mine";
        try{
