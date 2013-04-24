@@ -30,6 +30,7 @@ public class DBCreate {
         createDB();
         // create the tables in the data store
         createTables();
+        new XmlParser(c);
     }
     // method to create the data store
     private void createDB()
