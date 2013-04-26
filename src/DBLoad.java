@@ -39,4 +39,26 @@ public class DBLoad {
         con.close();
     }
     
+    public void updateTables(String t, ArrayList<String[]> c) throws SQLException{
+        con = DBase.dbConnection();
+        //String insert = "INSERT INTO \"ME\"."+ t +" VALUES(?,?,?,?)";
+        String update = "UPDATE \"ME\"." + t +" SET CurrencyName=?, Rate=?, RetreiveDate=? WHERE "
+                + "CountryCode=?";       
+        //con.setAutoCommit(false);
+        pst = con.prepareStatement(update);
+        for (String[] items : c){
+           pst.setString(1, items[1]);
+           pst.setDouble(2, Double.valueOf(items[2]));
+            pst.setDate(3, null);
+           pst.setString(4, items[0]);
+           
+          
+           pst.addBatch();
+        }
+        pst.executeBatch();
+        con.commit();
+        pst.close();
+        con.close();
+    }
+    
 }

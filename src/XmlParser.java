@@ -92,7 +92,8 @@ String[] c;
                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
            }
            try {
-               dbl.fillTables(h, curData);
+              // dbl.fillTables(h, curData);
+               dbl.updateTables(h, curData);
            } catch (SQLException ex) {
                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
            }
