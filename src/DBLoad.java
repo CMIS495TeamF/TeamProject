@@ -30,7 +30,7 @@ public class DBLoad {
            pst.setString(1, items[0]);
            pst.setString(2, items[1]);
            pst.setDouble(3, Double.valueOf(items[2]));
-           pst.setDate(4, null);
+           pst.setDate(4, Utilities.getSQLDate(items[3]));
            pst.addBatch();
         }
         pst.executeBatch();
@@ -49,7 +49,7 @@ public class DBLoad {
         for (String[] items : c){
            pst.setString(1, items[1]);
            pst.setDouble(2, Double.valueOf(items[2]));
-            pst.setDate(3, null);
+            pst.setDate(3, Utilities.getSQLDate(items[3]));
            pst.setString(4, items[0]);
            
           

@@ -1,3 +1,10 @@
+
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -22,7 +29,9 @@ public class Utilities {
     // method to extract the date out of the parsed data
     public String pubDate(String pb){
         if (pb == null) return null;
-        int pos = pb.lastIndexOf("GMT");
+        int pos =pb.lastIndexOf(",");
+        pb = pb.substring(pos+1);
+        pos = pb.lastIndexOf("GMT");
         pb = pb.substring(0, pos -1);
         return pb;
     }
@@ -47,6 +56,32 @@ public class Utilities {
         System.out.println(r);
         }
         return r;
+    }
+    
+    public static java.sql.Date getSQLDate(String sd){
+         java.util.Date d = stringToDate(sd);
+         java.sql.Date sqlD;
+         if (d == null){
+         sqlD = null;
+         }
+         else {
+             sqlD = new java.sql.Date(d.getTime());
+         }
+         //System.out.println(sqlD);
+         return sqlD;
+     }
+    
+    public static java.util.Date stringToDate(String s){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyy hh:mm:ss");
+        
+        java.util.Date date = null;
+        try {
+            date = sdf.parse(s);
+        } catch (ParseException ex) {
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return date;
     }
     
 }
