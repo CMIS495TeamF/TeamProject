@@ -1,4 +1,3 @@
-
 import java.io.File;
 
 /*
@@ -53,19 +52,19 @@ public static String dir;
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Currency Converter");
 
-        jLabel2.setText("jLabel2");
+        jLabel2.setText("Currency I have: ");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("Amount");
 
         jLabel3.setText("jLabel3");
 
-        jLabel4.setText("jLabel4");
+        jLabel4.setText("Currency I want");
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTextField2.setText("jTextField2");
+        jTextField2.setText("Amount");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
