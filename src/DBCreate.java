@@ -30,7 +30,7 @@ public class DBCreate {
         createDB();
         // create the tables in the data store
         createTables();
-        new XmlParser(c);
+        new XmlParser(c, true);
     }
     // method to create the data store
     private void createDB()
@@ -54,7 +54,7 @@ public class DBCreate {
         // for loop iterate over all elements in the array and create the tables
         for (String h : c){
         String insert = "CREATE TABLE \"ME\"."+ h + "(CountryCode VARCHAR(5) NOT NULL, CurrencyName VARCHAR(50), Rate DECIMAL(10,5),\n" +
-"RetreiveDate DATE, primary key (CountryCode))";
+"RetreiveDate TIMESTAMP, primary key (CountryCode))";
             st.execute(insert);
         }
         st.close();

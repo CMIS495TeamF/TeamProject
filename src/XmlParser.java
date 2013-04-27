@@ -26,9 +26,11 @@ public class XmlParser {
 Utilities u = new Utilities();
 DBLoad dbl = new DBLoad();
 String[] c;
-    public XmlParser(String[] c){
+Boolean isNew;
+    public XmlParser(String[] c, Boolean isNew){
         // set local string array to the array data from the currencyCalc class
         this.c = c;
+        this.isNew = isNew;
         parseFiles();
     }
     // method that will parse the online xml files and read data on the page
@@ -92,10 +94,15 @@ String[] c;
                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
            }
            try {
-              // dbl.fillTables(h, curData);
+               
+               if(isNew){
+                dbl.fillTables(h, curData);   
+               }
+               else if(!isNew){
                dbl.updateTables(h, curData);
+           }
            } catch (SQLException ex) {
-               Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+             System.err.println(ex);
            }
        } 
     }

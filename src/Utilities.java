@@ -58,25 +58,28 @@ public class Utilities {
         return r;
     }
     
-    public static java.sql.Date getSQLDate(String sd){
+    public static java.sql.Timestamp getSQLDate(String sd){
          java.util.Date d = stringToDate(sd);
-         java.sql.Date sqlD;
+         java.sql.Timestamp sqlD;
          if (d == null){
          sqlD = null;
          }
          else {
-             sqlD = new java.sql.Date(d.getTime());
+            
+             sqlD = new java.sql.Timestamp(d.getTime());
+             System.out.println(sqlD);
          }
          //System.out.println(sqlD);
          return sqlD;
      }
     
     public static java.util.Date stringToDate(String s){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyy hh:mm:ss");
-        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss");
+        System.out.println(s);
         java.util.Date date = null;
         try {
             date = sdf.parse(s);
+            System.out.println(date);
         } catch (ParseException ex) {
             Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
         }
