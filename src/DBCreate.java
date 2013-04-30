@@ -2,11 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.awt.BorderLayout;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 /**
  *
@@ -17,6 +22,11 @@ public class DBCreate {
     Statement st = null;
     // String array declared at class level to be used by methods
     String[] c;
+    int p = 0;
+
+    public int getP() {
+        return p;
+    }
     // data base connection strings
     private String dbURL = "jdbc:derby:myDB;create=true;user=me;password=mine";
     private String dbURL2 = "jdbc:derby:myDB;create=false;user=me;password=mine";
@@ -30,7 +40,7 @@ public class DBCreate {
         createDB();
         // create the tables in the data store
         createTables();
-        new XmlParser(c, true);
+        new Thread(new XmlParser(c, true)).start();
     }
     // method to create the data store
     private void createDB()
@@ -55,10 +65,15 @@ public class DBCreate {
         for (String h : c){
         String insert = "CREATE TABLE \"ME\"."+ h + "(CountryCode VARCHAR(5) NOT NULL, CurrencyName VARCHAR(50), Rate DECIMAL(10,5),\n" +
 "RetreiveDate TIMESTAMP, primary key (CountryCode))";
+            
             st.execute(insert);
+            p++;
         }
         st.close();
         con.close();
         }catch(SQLException e){}
     }
+    
+   
+    
 }

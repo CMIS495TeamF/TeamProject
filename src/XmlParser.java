@@ -1,4 +1,6 @@
 
+import java.awt.BorderLayout;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -6,6 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -22,21 +28,73 @@ import org.w3c.dom.NodeList;
  *
  * @author Aaron
  */
-public class XmlParser {
+public class XmlParser implements Runnable{
 Utilities u = new Utilities();
 DBLoad dbl = new DBLoad();
 String[] c;
 Boolean isNew;
+int p =0;
+Boolean kill = false;
+
+    public int getP() {
+        return p;
+    }
     public XmlParser(String[] c, Boolean isNew){
         // set local string array to the array data from the currencyCalc class
         this.c = c;
         this.isNew = isNew;
-        parseFiles();
+       
     }
+    
+    public void stop(){
+      Thread.currentThread().interrupt();
+      kill = true;
+    }
+    
+@Override
+    public void run(){
+   // try {
+       // netTest();
+   // } catch (InterruptedException ex) {
+   //     Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+   // }
+           
+       
+        try {
+            parseFiles();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void netTest() throws InterruptedException{
+        URL netTest = null;
+       try{        
+           netTest = new URL("http://themoneyconverter.com");
+       } catch(MalformedURLException e){
+          
+           System.out.println(e+"test");}
+    try {
+        InputStream xml = netTest.openStream();
+    } catch (IOException ex) {
+        Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+        stop();
+    }
+    }
+    
     // method that will parse the online xml files and read data on the page
-    private void parseFiles(){
+    private void parseFiles() throws InterruptedException{
         // iterate through each country in a for loop 
+       if (Thread.currentThread().isInterrupted()){
+               return;
+           }
+        
+        
+       new Thread(new createFrame(c)).start();
        for (String h : c){
+           if (Thread.currentThread().isInterrupted()){
+               return;
+           }
                // declare arraylist to store data from the xml file
                ArrayList<String[]> curData = new ArrayList<String[]>();
                String xmlUrlString = "http://themoneyconverter.com/rss-feed/"+h+"/rss.xml";
@@ -45,7 +103,11 @@ Boolean isNew;
            try {
                xmlURL = new URL(xmlUrlString);
            } catch (MalformedURLException ex) {
+               
+              
                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+               System.out.println("Malformed exception");
+               
            }
            try {
                // set up the xml parsing commands
@@ -91,7 +153,11 @@ Boolean isNew;
                }
                
            } catch (Exception ex) {
+               stop();
+               Thread.currentThread().interrupt();
+               System.out.println("in loop error");
                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+               
            }
            try {
                
@@ -104,7 +170,69 @@ Boolean isNew;
            } catch (SQLException ex) {
              System.err.println(ex);
            }
+           p++;
        } 
+    }
+    
+    public class createFrame implements Runnable{
+        String[] c;
+        public createFrame(String[] c){
+            this.c = c;   
+           }
+        
+       public void run(){ 
+           
+           
+           int i=0;
+           float dpercent = 0f;
+           String cc = c[0];
+           
+        JFrame.setDefaultLookAndFeelDecorated(true);
+            JFrame fFrame = new JFrame("Please wait while updating.");
+            
+            fFrame.setLocationRelativeTo(null);
+            JPanel panel = new JPanel();
+             JPanel panel2 = new JPanel();
+            fFrame.setSize(400,125);  
+            //panel.setSize(300,300);
+            fFrame.getContentPane().add(panel, BorderLayout.CENTER);
+            JLabel percent = new JLabel();
+            JLabel message = new JLabel();
+            message.setText("Updating Currency Code " +  cc + ".");
+            percent.setText(String.format("%,.0f%%", dpercent));
+            panel.add(percent);
+            fFrame.getContentPane().add(panel2, BorderLayout.SOUTH);
+            panel2.add(message);
+            JProgressBar jpb = new JProgressBar(0,90);
+            panel.add(jpb);
+            //fFrame.pack();
+            fFrame.setVisible(true);
+            while (p<=90){
+               if (Thread.currentThread().isInterrupted()){
+               fFrame.dispose();
+               return;
+           }
+               if (kill){
+                   Thread.currentThread().interrupt();
+               }
+               
+               i=getP();
+               jpb.setValue(i);
+               dpercent = (i * 100.0f) / 90;
+               cc = c[i];
+               percent.setText(String.format("%,.0f%%", dpercent));
+               message.setText("Updating Currency Code " +  cc + ".");
+               jpb.repaint();
+               //percent.setText("bad");
+               try{Thread.sleep(50);} //Sleep 50 milliseconds  
+
+              catch (InterruptedException err){}  
+
+            }
+            
+          }
+      
+       
     }
     
 }

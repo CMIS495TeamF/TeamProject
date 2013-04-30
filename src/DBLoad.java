@@ -1,8 +1,12 @@
 
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 /*
  * To change this template, choose Tools | Templates
@@ -16,6 +20,11 @@ import java.util.ArrayList;
 public class DBLoad {
     Connection con;
     PreparedStatement pst;
+    int p = 0;
+    JProgressBar jpb;
+    public int getP() {
+        return p;
+    }
     public DBLoad(){
       
     }
@@ -23,8 +32,10 @@ public class DBLoad {
     public void fillTables(String t, ArrayList<String[]> c) throws SQLException{
         con = DBase.dbConnection();
         String insert = "INSERT INTO \"ME\"."+ t +" VALUES(?,?,?,?)";
-               
-        //con.setAutoCommit(false);
+       //createFrame();
+        
+       // new Thread(new createPrBar()).start();     
+        con.setAutoCommit(false);
         pst = con.prepareStatement(insert);
         for (String[] items : c){
            pst.setString(1, items[0]);
@@ -36,6 +47,7 @@ public class DBLoad {
         }
         pst.executeBatch();
         con.commit();
+        p++;
         pst.close();
         con.close();
     }
@@ -47,6 +59,7 @@ public class DBLoad {
                 + "CountryCode=?";       
         //con.setAutoCommit(false);
         pst = con.prepareStatement(update);
+        //new Thread(new createPrBar()).start();
         for (String[] items : c){
            pst.setString(1, items[1]);
            pst.setDouble(2, Double.valueOf(items[2]));
@@ -63,4 +76,31 @@ public class DBLoad {
         con.close();
     }
     
+    public void createFrame(){
+        Frame fFrame = new Frame();
+            fFrame.setSize(300,100);
+            fFrame.setLayout(null);
+            JPanel panel = new JPanel();
+            panel.setSize(300,100);
+            fFrame.add(panel);
+            panel.add(new JLabel("test"));
+            JProgressBar jpb = new JProgressBar(0,90);
+            panel.add(jpb);
+            fFrame.setVisible(true);
+    }
+    
+    
+       public class createPrBar implements Runnable{
+        public void run(){
+            
+             while (p<=90){
+               jpb.setValue(getP());
+               jpb.repaint();
+               try{Thread.sleep(50);} //Sleep 50 milliseconds  
+
+              catch (InterruptedException err){}  
+
+            }
+        }
+    }
 }
