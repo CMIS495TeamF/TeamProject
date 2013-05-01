@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -95,13 +97,14 @@ public static String dir;
 
         jLabel6.setText("Amount:");
 
-        jTextField3.setText("jTextField3");
-
-        jTextField4.setText("jTextField4");
-
         jLabel7.setText("Result:");
 
         jButton1.setText("Calculate");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,17 +123,15 @@ public static String dir;
                             .addComponent(jLabel7)
                             .addComponent(jLabel6))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField4))
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel5)))
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel5))
                 .addContainerGap(131, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -173,6 +174,10 @@ public static String dir;
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
        jLabel5.setText(countries[jComboBox2.getSelectedIndex()]);
     }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,7 +237,18 @@ private void dbCheck(String dir){   //checks to see if the db has been created
    File isdb = new File(dir +"\\myDB"); 
    if (isdb.exists()){
        System.out.println("does exist");
+       Boolean refresh = dbDateCheck();
+       int c=0;
+       if (!refresh){
+       c = JOptionPane.showConfirmDialog(null, "The currecncy information is less than 24 hours old.\n"
+                   + "Do you want to update anyway?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+       if (c==0){
+           new Thread(new XmlParser(countries, false)).start();
+       }
+       }
+       else if (refresh){     
        new Thread(new XmlParser(countries, false)).start();
+       }
    }
    else{// if it does not exist run the DB create class to create DB
       
@@ -254,6 +270,24 @@ private void load(){
    dir = System.getProperty("user.dir");
    
    dbCheck(dir);
+}
+
+private Boolean dbDateCheck(){
+    Boolean b;
+    Calendar now = Calendar.getInstance();
+    long current = now.getTimeInMillis();
+   // Calendar c;
+    long rtime = DBRead.getLastUpdate();
+    long hours =  TimeUnit.MILLISECONDS.toHours(current-rtime);
+    // System.out.println(current);    
+    // System.out.println(rtime);  
+    //System.out.println(hours);
+    if (hours < 24){
+        b =false;
+    }
+    else b = true;
+    
+    return b;
 }
 
 }

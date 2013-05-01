@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Apr 29 21:18:11 CDT 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-013e-58bb-a0b5-00001252cfa8 
-on database directory C:\Users\Aaron\Documents\NetBeansProjects\CurrencyCalc\CurrencyCalc\myDB  with class loader sun.misc.Launcher$AppClassLoader@12360be0 
+Tue Apr 30 22:03:19 CDT 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-013e-5e0b-4d0d-00001252cfa8 
+on database directory C:\Users\Aaron\Documents\NetBeansProjects\CurrencyCalc\CurrencyCalc\myDB  with class loader sun.misc.Launcher$AppClassLoader@53372a1a 
 Loaded from file:/C:/Program%20Files%20(x86)/glassfish-3.1.2/javadb/lib/derby.jar
 java.vendor=Sun Microsystems Inc.
 java.runtime.version=1.6.0_43-b01

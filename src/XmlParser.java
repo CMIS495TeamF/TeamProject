@@ -207,7 +207,7 @@ Boolean kill = false;
             panel.add(jpb);
             //fFrame.pack();
             fFrame.setVisible(true);
-            while (p<=90){
+            while (p<90){
                if (Thread.currentThread().isInterrupted()){
                fFrame.dispose();
                return;
