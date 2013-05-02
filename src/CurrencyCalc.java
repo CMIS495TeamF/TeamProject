@@ -176,7 +176,13 @@ public static String dir;
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String tableName = countries[jComboBox1.getSelectedIndex()];
+        String ccCode = countries[jComboBox2.getSelectedIndex()];
+        Double amount = Double.valueOf(jTextField3.getText());
+        Double result;
+        Double rate = DBRead.getRate(tableName, ccCode);
+        result = amount * rate;
+        jTextField4.setText(result.toString());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -205,7 +211,6 @@ public static String dir;
             java.util.logging.Logger.getLogger(CurrencyCalc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

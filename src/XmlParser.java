@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.xml.parsers.DocumentBuilder;
@@ -47,17 +48,23 @@ Boolean kill = false;
     }
     
     public void stop(){
+       JOptionPane.showConfirmDialog(null, "Connection to the server could not be established1.\n"
+                   + "Check your internet connection and try again.", "Connection Error", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
       Thread.currentThread().interrupt();
       kill = true;
+      
+      
+              
+               
     }
     
 @Override
     public void run(){
-   // try {
-       // netTest();
-   // } catch (InterruptedException ex) {
-   //     Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
-   // }
+    try {
+        netTest();
+    } catch (InterruptedException ex) {
+       Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+    }
            
        
         try {
@@ -86,14 +93,16 @@ Boolean kill = false;
     private void parseFiles() throws InterruptedException{
         // iterate through each country in a for loop 
        if (Thread.currentThread().isInterrupted()){
+           
                return;
+               
            }
         
         
        new Thread(new createFrame(c)).start();
        for (String h : c){
            if (Thread.currentThread().isInterrupted()){
-               return;
+               
            }
                // declare arraylist to store data from the xml file
                ArrayList<String[]> curData = new ArrayList<String[]>();
@@ -180,9 +189,17 @@ Boolean kill = false;
             this.c = c;   
            }
         
+        @Override
        public void run(){ 
-           
-           
+            try {
+                go();     
+            } catch (InterruptedException ex) {
+                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("thread kill");
+            }
+          
+          }
+      private void go()throws InterruptedException{ 
            int i=0;
            float dpercent = 0f;
            String cc = c[0];
@@ -214,6 +231,8 @@ Boolean kill = false;
            }
                if (kill){
                    Thread.currentThread().interrupt();
+                   fFrame.dispose();
+                   return;
                }
                
                i=getP();
@@ -229,10 +248,8 @@ Boolean kill = false;
               catch (InterruptedException err){}  
 
             }
-            
-          }
-      
-       
+      }
+    
     }
     
 }

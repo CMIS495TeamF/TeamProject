@@ -16,8 +16,7 @@ import java.util.Calendar;
  */
 public class DBRead {
     
-    Connection conn = DBase.dbConnection();
-    PreparedStatement dbpst;
+    
     
     public static long getLastUpdate(){
         Connection con = DBase.dbConnection();
@@ -43,5 +42,28 @@ public class DBRead {
         }catch(SQLException e){System.err.println(e);}
         
         return t;
+    }
+    
+    public static double getRate(String c1, String c2){
+        Connection conn = DBase.dbConnection();
+        PreparedStatement dbpst;
+        double dr =0;
+        try{
+           String query = "Select Rate FROM "+c1+ " where CountryCode = ?";
+           dbpst=conn.prepareStatement(query);
+           dbpst.setString(1, c2);
+          
+            
+            ResultSet rs = dbpst.executeQuery();
+            
+             while(rs.next()){
+                 dr=rs.getDouble(1);
+         
+             } 
+             dbpst.close();
+             conn.close();
+        }catch(SQLException e){System.err.println(e);}
+        
+        return dr;
     }
 }
