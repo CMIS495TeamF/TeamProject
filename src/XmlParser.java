@@ -200,7 +200,7 @@ Boolean kill = false;
           
           }
       private void go()throws InterruptedException{ 
-           int i=0;
+           int i=1;
            float dpercent = 0f;
            String cc = c[0];
            
@@ -224,30 +224,37 @@ Boolean kill = false;
             panel.add(jpb);
             //fFrame.pack();
             fFrame.setVisible(true);
+            if (p<90){
             while (p<90){
                if (Thread.currentThread().isInterrupted()){
                fFrame.dispose();
                return;
            }
                if (kill){
-                   Thread.currentThread().interrupt();
-                   fFrame.dispose();
-                   return;
-               }
+                  Thread.currentThread().interrupt();
+                 fFrame.dispose();
+                  return;
+              }
                
                i=getP();
                jpb.setValue(i);
-               dpercent = (i * 100.0f) / 90;
+               dpercent = ((i+1) * 100.0f) / 90;
+               System.out.println(i);
                cc = c[i];
                percent.setText(String.format("%,.0f%%", dpercent));
                message.setText("Updating Currency Code " +  cc + ".");
                jpb.repaint();
                //percent.setText("bad");
-               try{Thread.sleep(50);} //Sleep 50 milliseconds  
+               try{Thread.sleep(500);} //Sleep 50 milliseconds  
 
               catch (InterruptedException err){}  
 
             }
+            }
+          
+                fFrame.dispose();
+            
+            
       }
     
     }

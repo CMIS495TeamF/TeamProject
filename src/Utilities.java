@@ -53,7 +53,7 @@ public class Utilities {
         if (r.contains(",")){
             pos = r.lastIndexOf(",");
         r = (r.substring(0, pos) + r.substring(pos+1));
-        System.out.println(r);
+        //System.out.println(r);
         }
         return r;
     }
@@ -67,7 +67,7 @@ public class Utilities {
          else {
             
              sqlD = new java.sql.Timestamp(d.getTime());
-             System.out.println(sqlD);
+             //System.out.println(sqlD);
          }
          //System.out.println(sqlD);
          return sqlD;
@@ -75,11 +75,11 @@ public class Utilities {
     
     public static java.util.Date stringToDate(String s){
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss");
-        System.out.println(s);
+        //System.out.println(s);
         java.util.Date date = null;
         try {
             date = sdf.parse(s);
-            System.out.println(date);
+            //System.out.println(date);
         } catch (ParseException ex) {
             Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, null, ex);
         }
