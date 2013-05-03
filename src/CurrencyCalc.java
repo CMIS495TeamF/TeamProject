@@ -68,6 +68,9 @@ public static String dir;
         jTextField4 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Currency Converter");
@@ -97,6 +100,12 @@ public static String dir;
 
         jLabel6.setText("Amount:");
 
+        jTextField3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField3FocusGained(evt);
+            }
+        });
+
         jLabel7.setText("Result:");
 
         jButton1.setText("Calculate");
@@ -105,6 +114,14 @@ public static String dir;
                 jButton1ActionPerformed(evt);
             }
         });
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,7 +178,7 @@ public static String dir;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
@@ -178,12 +195,26 @@ public static String dir;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String tableName = countries[jComboBox1.getSelectedIndex()];
         String ccCode = countries[jComboBox2.getSelectedIndex()];
+        if (isNumeric(jTextField3.getText())){
         Double amount = Double.valueOf(jTextField3.getText());
         Double result;
         Double rate = DBRead.getRate(tableName, ccCode);
         result = amount * rate;
         jTextField4.setText(result.toString());
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jTextField3.requestFocusInWindow();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusGained
+        // TODO add your handling code here:
+        jTextField3.setText("");
+            jTextField4.setText("");
+    }//GEN-LAST:event_jTextField3FocusGained
 
     /**
      * @param args the command line arguments
@@ -233,6 +264,9 @@ public static String dir;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
@@ -294,5 +328,10 @@ private Boolean dbDateCheck(){
     
     return b;
 }
+
+ public static boolean isNumeric(String s){
+        return s.matches("[-+]?\\d*\\.?\\d+");
+          
+    }
 
 }
