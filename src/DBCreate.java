@@ -2,16 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-import java.awt.BorderLayout;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -53,7 +49,8 @@ public class DBCreate {
             con.close();
         }
         catch (Exception ex)
-        {System.err.println(ex);
+        { JOptionPane.showMessageDialog(null, ex, "Error", JOptionPane.ERROR_MESSAGE);
+           System.exit(0);
         }
     }
     // method to create the tables

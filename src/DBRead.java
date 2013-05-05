@@ -17,7 +17,7 @@ import java.util.Calendar;
 public class DBRead {
     
     
-    
+    // static method to get the date of the timestamp from tables
     public static long getLastUpdate(){
         Connection con = DBase.dbConnection();
         PreparedStatement pst;
@@ -44,6 +44,7 @@ public class DBRead {
         return t;
     }
     
+    // static method to get the rate of the selected countries
     public static double getRate(String c1, String c2){
         Connection conn = DBase.dbConnection();
         PreparedStatement dbpst;
@@ -65,5 +66,27 @@ public class DBRead {
         }catch(SQLException e){System.err.println(e);}
         
         return dr;
+    }
+    
+    // static method to determine if data exists in the tables
+    public static boolean isData(){
+        Boolean b=false;
+        Connection con = DBase.dbConnection();
+        PreparedStatement pst;
+        try{
+            String query = "Select CountryCode FROM AED";
+            pst = con.prepareStatement(query);
+     
+            ResultSet rs = pst.executeQuery();
+            System.out.println(rs.getFetchSize());
+            if (rs.getFetchSize()>1){
+                b=false;
+            }
+            else if (rs.getFetchSize()<1){
+                    b=true;
+            }
+        }catch(SQLException e){System.err.println(e);}
+        
+        return b;
     }
 }

@@ -29,9 +29,15 @@ import org.w3c.dom.NodeList;
  *
  * @author Aaron
  */
+
+// this class implement runnable an starts a new thread so that the main gui can be displayed while the
+// tables in the background are updaing
 public class XmlParser implements Runnable{
+// intialized other classes for use in this class    
 Utilities u = new Utilities();
 DBLoad dbl = new DBLoad();
+
+// declare variables 
 String[] c;
 Boolean isNew;
 int p =0;
@@ -40,6 +46,7 @@ Boolean kill = false;
     public int getP() {
         return p;
     }
+    // class constructor
     public XmlParser(String[] c, Boolean isNew){
         // set local string array to the array data from the currencyCalc class
         this.c = c;
@@ -47,10 +54,13 @@ Boolean kill = false;
        
     }
     
+    // stop method that the thread can be safely stoped if there is an error or task completed
     public void stop(){
-       JOptionPane.showConfirmDialog(null, "Connection to the server could not be established1.\n"
-                   + "Check your internet connection and try again.", "Connection Error", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+       // option pane to show message if app can not connect to the web stite 
+       JOptionPane.showMessageDialog(null, "Connection to the server could not be established1.\n"
+                   + "Check your internet connection and try again.", "Connection Error", JOptionPane.ERROR_MESSAGE);
       Thread.currentThread().interrupt();
+      // boolean value used to triger the thread stopping of the progress bar
       kill = true;
       
       
@@ -60,13 +70,14 @@ Boolean kill = false;
     
 @Override
     public void run(){
+    // try netTest method to see if app can connect to the internet.
     try {
         netTest();
     } catch (InterruptedException ex) {
        Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
     }
            
-       
+       // if there is internet access run the parseFiles method
         try {
             parseFiles();
         } catch (InterruptedException ex) {
@@ -74,6 +85,7 @@ Boolean kill = false;
         }
     }
 
+    // method to check to see there is an internet connection to the web site
     private void netTest() throws InterruptedException{
         URL netTest = null;
        try{        
@@ -97,9 +109,14 @@ Boolean kill = false;
                return;
                
            }
-        
-        
+       // is new method checks to see if there is a db, but has no data 
+       // ie... databases were created but never filled on start
+       // this will check to see if data exits, so that that data can be inserted
+       // rather than using the update method.
+       isNew = DBRead.isData();
+       // start thread for progress bar
        new Thread(new createFrame(c)).start();
+       // loop through cc codes to parse the xml data
        for (String h : c){
            if (Thread.currentThread().isInterrupted()){
                
@@ -162,27 +179,34 @@ Boolean kill = false;
                }
                
            } catch (Exception ex) {
+               // if connection is stopped while loop is running catch exception and stop thread and display message in 
+               // stop method
                stop();
                Thread.currentThread().interrupt();
-               System.out.println("in loop error");
+              // System.out.println("in loop error");
                Logger.getLogger(XmlParser.class.getName()).log(Level.SEVERE, null, ex);
                
            }
            try {
-               
+               // if new or needs filled uses the insert method
                if(isNew){
-                dbl.fillTables(h, curData);   
+                  dbl.fillTables(h, curData);
                }
+               // data alllready exists, use udpate method
                else if(!isNew){
-               dbl.updateTables(h, curData);
-           }
+               dbl.updateTables(h, curData);                
+               }
            } catch (SQLException ex) {
              System.err.println(ex);
            }
+           // increment counter for progress bar 
            p++;
        } 
     }
     
+    
+    
+    // inner class to create new thread and progress bar
     public class createFrame implements Runnable{
         String[] c;
         public createFrame(String[] c){
@@ -199,6 +223,7 @@ Boolean kill = false;
             }
           
           }
+        // method that creates new frame and calculates percentage done and udpates bar
       private void go()throws InterruptedException{ 
            int i=1;
            float dpercent = 0f;
@@ -216,6 +241,7 @@ Boolean kill = false;
             JLabel percent = new JLabel();
             JLabel message = new JLabel();
             message.setText("Updating Currency Code " +  cc + ".");
+            // string format for percentage
             percent.setText(String.format("%,.0f%%", dpercent));
             panel.add(percent);
             fFrame.getContentPane().add(panel2, BorderLayout.SOUTH);
@@ -239,13 +265,12 @@ Boolean kill = false;
                i=getP();
                jpb.setValue(i);
                dpercent = ((i+1) * 100.0f) / 90;
-               System.out.println(i);
+               //System.out.println(i);
                cc = c[i];
                percent.setText(String.format("%,.0f%%", dpercent));
                message.setText("Updating Currency Code " +  cc + ".");
                jpb.repaint();
-               //percent.setText("bad");
-               try{Thread.sleep(500);} //Sleep 50 milliseconds  
+               try{Thread.sleep(450);} //Sleep 50 milliseconds  
 
               catch (InterruptedException err){}  
 

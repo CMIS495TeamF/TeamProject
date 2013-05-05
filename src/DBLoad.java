@@ -1,11 +1,8 @@
 
-import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 /*
@@ -76,31 +73,6 @@ public class DBLoad {
         con.close();
     }
     
-    public void createFrame(){
-        Frame fFrame = new Frame();
-            fFrame.setSize(300,100);
-            fFrame.setLayout(null);
-            JPanel panel = new JPanel();
-            panel.setSize(300,100);
-            fFrame.add(panel);
-            panel.add(new JLabel("test"));
-            JProgressBar jpb = new JProgressBar(0,90);
-            panel.add(jpb);
-            fFrame.setVisible(true);
-    }
+   
     
-    
-       public class createPrBar implements Runnable{
-        public void run(){
-            
-             while (p<=90){
-               jpb.setValue(getP());
-               jpb.repaint();
-               try{Thread.sleep(50);} //Sleep 50 milliseconds  
-
-              catch (InterruptedException err){}  
-
-            }
-        }
-    }
 }

@@ -24,6 +24,8 @@ String[] countries = new String[]{"AED","ARS","AUD","AWG","BAM","BBD","BDT","BGN
 "PLN","PYG","QAR","RON","RSD","RUB","SAR","SCR","SEK","SGD","SYP","THB","TND","TRY",
 "TWD","UAH","UGX","USD","UYU","VEF","VND","XAF","XCD","XOF","XPF","ZAR"};
 
+
+//string array to store the country names
 String[] cNames = new String[]{"United Arab Emirates","Argentina","Australia","Aruba",
 "Bosnia and Herzegovina","Barbados","Bangladesh","Bulgaria","Bahrain","Bermuda","Bolivia",
 "Brazil","Bahamas","Canada","Switzerland","Chile","China","Colombia","Czech Republic","Denmark",
@@ -70,6 +72,7 @@ public static String dir;
         jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -116,6 +119,15 @@ public static String dir;
         });
 
         jMenu1.setText("File");
+
+        jMenuItem1.setText("Refresh Data");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -145,11 +157,11 @@ public static String dir;
                     .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField4))
-                .addGap(40, 40, 40)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel5))
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jButton1)
@@ -184,37 +196,62 @@ public static String dir;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // action when the first combobox is selected
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // sets label to thhe corresponding country code label
         jLabel1.setText(countries[jComboBox1.getSelectedIndex()]);
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-       jLabel5.setText(countries[jComboBox2.getSelectedIndex()]);
+        // sets label to thhe corresponding country code label
+        jLabel5.setText(countries[jComboBox2.getSelectedIndex()]);
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
+    
+    
+    //calculation button determines the currency conversion rate.
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //table name used for db look up comes from first combo box
         String tableName = countries[jComboBox1.getSelectedIndex()];
+        // ccCode comes from second combo box
         String ccCode = countries[jComboBox2.getSelectedIndex()];
+        
+        // call method to determine if user entered a valid number
         if (isNumeric(jTextField3.getText())){
+        // if a valid number perform calculation
+            //convert string to doube value
         Double amount = Double.valueOf(jTextField3.getText());
         Double result;
+        // retrieve rate from table
         Double rate = DBRead.getRate(tableName, ccCode);
+        // calculate rate
         result = amount * rate;
+        // display result in textbox
         jTextField4.setText(result.toString());
+        
         }
         else{
+            // if user did not enter a valid number display message box
             JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            // reset text fieds
             jTextField3.setText("");
             jTextField4.setText("");
+            // set focus back to first text box
             jTextField3.requestFocusInWindow();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusGained
-        // TODO add your handling code here:
+        // if user clicks into first text box, clear both text boxes
         jTextField3.setText("");
-            jTextField4.setText("");
+        jTextField4.setText("");
     }//GEN-LAST:event_jTextField3FocusGained
+
+    //refresh menu item
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // if user selects refresh menu item, refresh the database
+        new Thread(new XmlParser(countries, false)).start();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -245,10 +282,11 @@ public static String dir;
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
+            // declare variable to access method from non static content    
             CurrencyCalc app =  new CurrencyCalc();
                 app.setLocationRelativeTo(null);
                 app.setVisible(true);
+                // run load method
                 app.load();
                 
             }
@@ -267,6 +305,7 @@ public static String dir;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
@@ -275,60 +314,76 @@ public static String dir;
 private void dbCheck(String dir){   //checks to see if the db has been created
    File isdb = new File(dir +"\\myDB"); 
    if (isdb.exists()){
-       System.out.println("does exist");
+       // if db files exists check for the date tables were loaded.
+       // if less then 24 hours old prompt to load again
        Boolean refresh = dbDateCheck();
        int c=0;
        if (!refresh){
        c = JOptionPane.showConfirmDialog(null, "The currecncy information is less than 24 hours old.\n"
                    + "Do you want to update anyway?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+       // if user selects yes, update the tables
        if (c==0){
            new Thread(new XmlParser(countries, false)).start();
        }
        }
+       // if dates are older than 24 hours, update tables
        else if (refresh){     
        new Thread(new XmlParser(countries, false)).start();
        }
    }
+   
+   
    else{// if it does not exist run the DB create class to create DB
-      
+      // show message box informing that a db does not exist
      JOptionPane.showMessageDialog(null,"A Database does not exist, please wait for the database to be created",
         "Warning",JOptionPane.WARNING_MESSAGE);
-       System.out.println("does not exist");
        new DBCreate(countries, dir);
    }
 }
 
 private void load(){
+    // set the comboxes to new model based off of the countries names array
    DefaultComboBoxModel dcbm = new DefaultComboBoxModel(cNames);
    DefaultComboBoxModel dcbm2 = new DefaultComboBoxModel(cNames);
+   //set model for first combo box
    jComboBox1.setModel(dcbm);
+   // set default on first box to US dollars
    jComboBox1.setSelectedIndex(81);
+   // set model to second combo box
    jComboBox2.setModel(dcbm2);
+   // set lables to corresponding comboboxes
    jLabel1.setText(countries[jComboBox1.getSelectedIndex()]);
    jLabel5.setText(countries[jComboBox2.getSelectedIndex()]);
+   // ensure system property is set to check for databases
    dir = System.getProperty("user.dir");
    
+   // run method to check if DB files exist
    dbCheck(dir);
 }
 
+
+// method to check for dates
 private Boolean dbDateCheck(){
     Boolean b;
+    // get current time
     Calendar now = Calendar.getInstance();
+    // convert to mili seconds for math differential
     long current = now.getTimeInMillis();
-   // Calendar c;
+   // run method to to get the date of the last updated table update
     long rtime = DBRead.getLastUpdate();
+    /// find the number of hours between the table load dates and the current date
     long hours =  TimeUnit.MILLISECONDS.toHours(current-rtime);
-    // System.out.println(current);    
-    // System.out.println(rtime);  
-    //System.out.println(hours);
+    // if less then 24 set boolean to false
     if (hours < 24){
         b =false;
     }
+    // if over 24 set to true
     else b = true;
     
     return b;
 }
 
+ // method to check to see if user input is a number or if contains invalid characters
  public static boolean isNumeric(String s){
         return s.matches("[-+]?\\d*\\.?\\d+");
           
