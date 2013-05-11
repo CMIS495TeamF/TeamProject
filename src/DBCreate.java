@@ -17,16 +17,16 @@ public class DBCreate {
     Connection con = null;
     Statement st = null;
     // String array declared at class level to be used by methods
-    String[] c;
+    static String[] c;
     int p = 0;
-
+    
     public int getP() {
         return p;
     }
     // data base connection strings
     private String dbURL = "jdbc:derby:myDB;create=true;user=me;password=mine";
     private String dbURL2 = "jdbc:derby:myDB;create=false;user=me;password=mine";
-    public DBCreate(String[] c, String dir){
+    public DBCreate(String[] c, String dir, CurrencyCalc cc){
         // set the passed string array to the local string array
         this.c = c;
         // this sets the derby database file location
@@ -36,7 +36,7 @@ public class DBCreate {
         createDB();
         // create the tables in the data store
         createTables();
-        new Thread(new XmlParser(c, true)).start();
+        new Thread(new XmlParser(c, true, cc)).start();
     }
     // method to create the data store
     private void createDB()

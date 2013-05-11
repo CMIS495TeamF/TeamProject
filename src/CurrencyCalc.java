@@ -1,8 +1,14 @@
+import java.awt.BorderLayout;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /*
  * To change this template, choose Tools | Templates
@@ -44,9 +50,15 @@ String[] cNames = new String[]{"United Arab Emirates","Argentina","Australia","A
 // static string to set the db to the executing directory, instead of the root
 // set static so any class has any access to it
 public static String dir;
+
+CurrencyCalc appP;
+Double drate;
+String dtime;
+Date dt;
+String curName1, curName2;
     public CurrencyCalc() {
         initComponents();
-        // method to see if a data store allready exists
+       
       
     }
 
@@ -70,10 +82,15 @@ public static String dir;
         jTextField4 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Currency Converter");
@@ -118,6 +135,8 @@ public static String dir;
             }
         });
 
+        jLabel3.setText("Last Update:");
+
         jMenu1.setText("File");
 
         jMenuItem1.setText("Refresh Data");
@@ -130,7 +149,16 @@ public static String dir;
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Help");
+
+        jMenuItem2.setText("About");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -139,6 +167,10 @@ public static String dir;
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(68, 68, 68))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -152,25 +184,33 @@ public static String dir;
                             .addComponent(jLabel7)
                             .addComponent(jLabel6))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField4))
-                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextField4))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel5))))
                 .addContainerGap(145, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(68, 68, 68))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel8))
+                .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,7 +230,11 @@ public static String dir;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10)
+                .addContainerGap(116, Short.MAX_VALUE))
         );
 
         pack();
@@ -211,6 +255,8 @@ public static String dir;
     
     //calculation button determines the currency conversion rate.
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss");
+        
         //table name used for db look up comes from first combo box
         String tableName = countries[jComboBox1.getSelectedIndex()];
         // ccCode comes from second combo box
@@ -224,11 +270,16 @@ public static String dir;
         Double result;
         // retrieve rate from table
         Double rate = DBRead.getRate(tableName, ccCode);
+        drate = rate;
+        jLabel8.setText(sdf.format(dt));
+        curName1 = DBRead.currencyName1(tableName);
+        curName2 = DBRead.currencyName2(tableName, ccCode);
         // calculate rate
-        result = amount * rate;
+        result = (double)Math.round((amount * rate) * 100)/100;
         // display result in textbox
         jTextField4.setText(result.toString());
-        
+        jLabel9.setText("One "+ curName1 + " equals");
+        jLabel10.setText(rate + " " + curName2);
         }
         else{
             // if user did not enter a valid number display message box
@@ -250,8 +301,29 @@ public static String dir;
     //refresh menu item
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // if user selects refresh menu item, refresh the database
-        new Thread(new XmlParser(countries, false)).start();
+        new Thread(new XmlParser(countries, false, appP)).start();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+       JFrame fFrame = new JFrame("About team F Currency Converter.");
+       fFrame.setLocationRelativeTo(null);
+       JPanel apanel = new JPanel();
+       fFrame.setSize(400,200); 
+       fFrame.getContentPane().add(apanel, BorderLayout.CENTER);
+      
+       JLabel message = new JLabel();
+      
+        apanel.add(message);
+       
+       String smessage = ("<html><body>Team F's Currency Converter is brought to you by<br>"+
+               "Aaron Tennant, Roger Joudrey, and Gurpreet Singh.<br>"+
+               "Special thanks to http://themoneyconverter.com where<br>" +
+               "we were able to get the xml conversion feeds.");
+       message.setText(smessage);
+       fFrame.add(apanel);
+      
+       fFrame.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,6 +358,7 @@ public static String dir;
             CurrencyCalc app =  new CurrencyCalc();
                 app.setLocationRelativeTo(null);
                 app.setVisible(true);
+                app.appP = app;
                 // run load method
                 app.load();
                 
@@ -297,15 +370,20 @@ public static String dir;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
@@ -314,22 +392,32 @@ public static String dir;
 private void dbCheck(String dir){   //checks to see if the db has been created
    File isdb = new File(dir +"\\myDB"); 
    if (isdb.exists()){
+       
+       if (DBRead.DBIntegrityCheck(countries)){
+           JOptionPane.showMessageDialog(null,"The Database appears to be damaged, please wait create a new one.",
+        "Warning",JOptionPane.WARNING_MESSAGE);
+           DBRead.DBDelete(countries);
+           new Thread(new XmlParser(countries, false, appP)).start();
+       }
+       else if  (!DBRead.DBIntegrityCheck(countries)){  
        // if db files exists check for the date tables were loaded.
        // if less then 24 hours old prompt to load again
+      
        Boolean refresh = dbDateCheck();
        int c=0;
-       if (!refresh){
+        if (!refresh){
        c = JOptionPane.showConfirmDialog(null, "The currecncy information is less than 24 hours old.\n"
                    + "Do you want to update anyway?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
        // if user selects yes, update the tables
        if (c==0){
-           new Thread(new XmlParser(countries, false)).start();
+           new Thread(new XmlParser(countries, false, appP)).start();
        }
        }
        // if dates are older than 24 hours, update tables
        else if (refresh){     
-       new Thread(new XmlParser(countries, false)).start();
+       new Thread(new XmlParser(countries, false, appP)).start();
        }
+   }
    }
    
    
@@ -337,7 +425,7 @@ private void dbCheck(String dir){   //checks to see if the db has been created
       // show message box informing that a db does not exist
      JOptionPane.showMessageDialog(null,"A Database does not exist, please wait for the database to be created",
         "Warning",JOptionPane.WARNING_MESSAGE);
-       new DBCreate(countries, dir);
+       new DBCreate(countries, dir, appP);
    }
 }
 
@@ -371,6 +459,7 @@ private Boolean dbDateCheck(){
     long current = now.getTimeInMillis();
    // run method to to get the date of the last updated table update
     long rtime = DBRead.getLastUpdate();
+    dt = new Date(rtime);
     /// find the number of hours between the table load dates and the current date
     long hours =  TimeUnit.MILLISECONDS.toHours(current-rtime);
     // if less then 24 set boolean to false

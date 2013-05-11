@@ -42,16 +42,16 @@ String[] c;
 Boolean isNew;
 int p =0;
 Boolean kill = false;
-
+CurrencyCalc  app;
     public int getP() {
         return p;
     }
     // class constructor
-    public XmlParser(String[] c, Boolean isNew){
+    public XmlParser(String[] c, Boolean isNew, CurrencyCalc cc){
         // set local string array to the array data from the currencyCalc class
         this.c = c;
         this.isNew = isNew;
-       
+        this.app = cc;
     }
     
     // stop method that the thread can be safely stoped if there is an error or task completed
@@ -109,13 +109,17 @@ Boolean kill = false;
                return;
                
            }
+       
+       
+       
+       
        // is new method checks to see if there is a db, but has no data 
        // ie... databases were created but never filled on start
        // this will check to see if data exits, so that that data can be inserted
        // rather than using the update method.
-       isNew = DBRead.isData();
+       isNew = DBRead.isData(c);
        // start thread for progress bar
-       new Thread(new createFrame(c)).start();
+       new Thread(new createFrame(c, app)).start();
        // loop through cc codes to parse the xml data
        for (String h : c){
            if (Thread.currentThread().isInterrupted()){
@@ -209,8 +213,10 @@ Boolean kill = false;
     // inner class to create new thread and progress bar
     public class createFrame implements Runnable{
         String[] c;
-        public createFrame(String[] c){
+        CurrencyCalc app;
+        public createFrame(String[] c, CurrencyCalc cc){
             this.c = c;   
+            this.app = cc;
            }
         
         @Override
@@ -229,9 +235,16 @@ Boolean kill = false;
            float dpercent = 0f;
            String cc = c[0];
            
+           app.setEnabled(false);
+           
         JFrame.setDefaultLookAndFeelDecorated(true);
             JFrame fFrame = new JFrame("Please wait while updating.");
-            
+            fFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    app.setEnabled(true);
+                }
+            });
             fFrame.setLocationRelativeTo(null);
             JPanel panel = new JPanel();
              JPanel panel2 = new JPanel();
@@ -276,7 +289,7 @@ Boolean kill = false;
 
             }
             }
-          
+                app.setEnabled(true);
                 fFrame.dispose();
             
             
